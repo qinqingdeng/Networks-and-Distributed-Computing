@@ -11,16 +11,16 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 public class HttpServer extends Thread {
-	//web×ÊÔ´Â·¾¶£¬´Ë´¦ÎªÏà¶ÔÂ·¾¶
+	//webèµ„æºè·¯å¾„ï¼Œæ­¤å¤„ä¸ºç›¸å¯¹è·¯å¾„
 		public static final String ROOT = "./resource";
-		//ÊäÈëÁ÷¶ÔÏó,¶ÁÈ¡ä¯ÀÀÆ÷ÇëÇó
+		//è¾“å…¥æµå¯¹è±¡,è¯»å–æµè§ˆå™¨è¯·æ±‚
 		private InputStream input;
-		//Êä³öÁ÷¶ÔÏó£¬ÏìÓ¦ÄÚÈİ¸øä¯ÀÀÆ÷
+		//è¾“å‡ºæµå¯¹è±¡ï¼Œå“åº”å†…å®¹ç»™æµè§ˆå™¨
 		private OutputStream out;
-		//ÒòÎª±àÂëÎÊÌâ£¬text/html,ÈôÖ±½ÓÊ¹ÓÃoutÊä³ö»áÊ¹ÓÃÄ¬ÈÏ±àÂë£¬¶ø²»ÊÇUTF-8,Òò´Ë»áµ¼ÖÂÖĞÎÄÂÒÂë
+		//å› ä¸ºç¼–ç é—®é¢˜ï¼Œtext/html,è‹¥ç›´æ¥ä½¿ç”¨outè¾“å‡ºä¼šä½¿ç”¨é»˜è®¤ç¼–ç ï¼Œè€Œä¸æ˜¯UTF-8,å› æ­¤ä¼šå¯¼è‡´ä¸­æ–‡ä¹±ç 
 		private OutputStreamWriter osw;
 	 
-	    //³õÊ¼»¯socket¶ÔÏó,»ñÈ¡¶ÔÓ¦ ÊäÈë£¬Êä³öÁ÷
+	    //åˆå§‹åŒ–socketå¯¹è±¡,è·å–å¯¹åº” è¾“å…¥ï¼Œè¾“å‡ºæµ
 		public HttpServer(Socket socket) {
 			try {
 				input = socket.getInputStream();
@@ -31,7 +31,7 @@ public class HttpServer extends Thread {
 			}
 		}
 	 
-		//¶àÏß³Ì·½·¨µ÷ÓÃ
+		//å¤šçº¿ç¨‹æ–¹æ³•è°ƒç”¨
 		@Override
 		public void run() {
 			String filePath = read();
@@ -44,11 +44,11 @@ public class HttpServer extends Thread {
 	  	    System.out.println("filePath():"+file.getPath());
 	     	//System.out.println("file.getName():"+file.getName());
 	  		
-			//·ÀÖ¹ÓÃ»§Ö±½ÓÊäÈë"localhost:portnumber",µ¼ÖÂÂ·¾¶Îª".\resource"¶ø³öÏÖ´íÎó¡£
+			//é˜²æ­¢ç”¨æˆ·ç›´æ¥è¾“å…¥"localhost:portnumber",å¯¼è‡´è·¯å¾„ä¸º".\resource"è€Œå‡ºç°é”™è¯¯ã€‚
 			if (file.exists() && !file.getPath().equals(".\\resource")) {
-				//×ÊÔ´´æÔÚ£¬¶ÁÈ¡×ÊÔ´
+				//èµ„æºå­˜åœ¨ï¼Œè¯»å–èµ„æº
 				try {
-					//»ñÈ¡ÎÄ¼şÀàĞÍ£¬ÅĞ¶ÏContent-Type
+					//è·å–æ–‡ä»¶ç±»å‹ï¼Œåˆ¤æ–­Content-Type
 					String fileType =file.getName().split("\\.")[1];
 					//System.out.println("fileType:"+fileType);
 					if(fileType.equals("html")) {
@@ -83,8 +83,8 @@ public class HttpServer extends Thread {
 						//System.out.println(result.toString());   
 						out.write(result.toString().getBytes());   
 						FileInputStream fis = new FileInputStream(file);
-							byte[] buf=new byte[1024];
-							int len=0; 
+						byte[] buf=new byte[1024];
+						int len=0; 
 					    while((len=fis.read(buf))!=-1){
 					       out.write(buf,0,len);
 					    }
@@ -98,7 +98,7 @@ public class HttpServer extends Thread {
 				}
 	 
 			} else {   
-				//×ÊÔ´²»´æÔÚ£¬ÌáÊ¾ File not found
+				//èµ„æºä¸å­˜åœ¨ï¼Œæç¤º File not found
 				try {
 					StringBuffer error = new StringBuffer();
 					String html="<h1>404 File Not Found.</h1>";
@@ -118,13 +118,13 @@ public class HttpServer extends Thread {
 	 
 		}
 	 
-	    //½âÎöÇëÇóÂ·¾¶
+	    //è§£æè¯·æ±‚è·¯å¾„
 		private String read() {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 			try {
-				// ¶ÁÈ¡ÇëÇóÍ·£¬ Èç£ºGET /index.html HTTP/1.1
+				// è¯»å–è¯·æ±‚å¤´ï¼Œ å¦‚ï¼šGET /index.html HTTP/1.1
 				String readLine = reader.readLine();
-				// ·ÀÖ¹ÓÃ»§Ö±½ÓÊäÈë"localhost:portnumber"¶ø³öÏÖ´íÎó¡£
+				// é˜²æ­¢ç”¨æˆ·ç›´æ¥è¾“å…¥"localhost:portnumber"è€Œå‡ºç°é”™è¯¯ã€‚
 				System.out.println(readLine);
 				if(readLine==null)
 					return "/";
